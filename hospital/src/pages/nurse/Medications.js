@@ -186,14 +186,11 @@ function Medications({ handleBack, currentIndex, setcurrentIndex }) {
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />        
       </div>
 
-      {
-        currentItems?.length > 6 ?
-          <div className="custome_table_btn">
-            <button className="custome_table_btn1" onClick={addRow}>ADD</button>
-            <button className="custome_table_btn2" onClick={handleSubmit}>SAVE CHANGES</button>
-          </div>
-        : null
-      }
+      <div className="custome_table_btn">
+        <button className="custome_table_btn1" onClick={addRow}>ADD</button>
+        <button className="custome_table_btn2" onClick={handleSubmit}>SAVE CHANGES</button>
+      </div>
+        
       
 
       <table className="custome_table">

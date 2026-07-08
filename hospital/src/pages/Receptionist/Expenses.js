@@ -189,6 +189,29 @@ function Expenses() {
         }
     }
 
+    
+    const [utilities, setutilities] = useState([])
+
+    useEffect(()=>{
+        const controller = new AbortController()
+        const func =async()=>{
+          try {
+            await axios.post(`http://${ip?.ip }:7700/getsubscriptions`, {signal: controller.signal}).then((res)=>{  
+                // console.log(res);
+                        
+              if(res.data.status === 'success'){
+                setutilities(res.data.diagnosis)
+                setreload(0)
+              }
+            })
+          } catch (error) {
+            console.log(error); 
+          }
+        }
+        func()
+      return ()=> controller.abort()
+      },[reload, ip])
+
   return (
     <div className='dashboard_container'>
         <SideBar/>
@@ -253,6 +276,13 @@ function Expenses() {
                             <option value={"COMMUNICATION ICT"}>COMMUNICATION ICT</option>
                             <option value={"CLEANING, UTILITIES & GENERAL OPERATIONS"}>CLEANING, UTILITIES & GENERAL OPERATIONS</option>
                             <option value={"SALARY"}>SALARY</option>
+                            {
+                                utilities?.length > 0 ?
+                                    utilities?.map((item, i)=> (
+                                        <option key={i} value={item.name}>{item.name}</option>
+                                    ))
+                                : null
+                            }
                         </select>
                     </div>
 
@@ -322,6 +352,13 @@ function Expenses() {
                                     <option value={"COMMUNICATION ICT"}>COMMUNICATION ICT</option>
                                     <option value={"CLEANING, UTILITIES & GENERAL OPERATIONS"}>CLEANING, UTILITIES & GENERAL OPERATIONS</option>
                                     <option value={"SALARY"}>SALARY</option>
+                                    {
+                                        utilities?.length > 0 ?
+                                            utilities?.map((item, i)=> (
+                                                <option key={i} value={item.name}>{item.name}</option>
+                                            ))
+                                        : null
+                                    }
                                 </select>
                             </div>
                             

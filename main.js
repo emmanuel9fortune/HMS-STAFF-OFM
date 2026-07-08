@@ -1,12 +1,6 @@
 const bonjour = require('bonjour')()
 const { app, BrowserWindow, Notification, powerSaveBlocker, screen, ipcMain } = require('electron');
 const path = require('path');
-// require('electron-reload')(__dirname, {
-//     watch:[
-//         path.join(__dirname, './hospital-client/public'),
-//         path.join(__dirname, './hospital-client/src')
-//     ]
-// })
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -86,26 +80,19 @@ function createWindow() {
   const win = new BrowserWindow({
       width,
       height,
+      minHeight: height * 0.8,
+      icon: path.join(__dirname, 'hospital', 'build', 'logo.jpg'),
       webPreferences: {
-          preload: path.join(__dirname, 'preload.js'),
-          icon: path.join(__dirname, 'logo.jpg'),
-          contextIsolation: true,
-          nodeIntegration: false
-      }
+          nodeIntegration: true,
+          contextIsolation: false,
+      },
   });
-  // win.loadURL('http://localhost:3000')
+  // win.loadURL('http://localhost:3001')
   // win.use(express.static(path.join(__dirname, 'hospital', 'build')));
   const buildPath = path.join(__dirname, 'hospital', 'build', 'index.html');
   win.loadFile(buildPath)
 
   // win.webContents.openDevTools()
-  const notification = new Notification({
-      title: 'My Electron App',
-      body: 'This is a notification from your app!'
-  });
-
-  notification.onclick = () => {};
-  notification.show();
 }
 ///////////////////////////////////////////////////////
 // App Lifecycle
@@ -151,14 +138,9 @@ app.commandLine.appendSwitch(
 
 app.whenReady().then(async() => {
     
-    createServer();
     createWindow();
-    const notification = new Notification({
-        title: 'O.F.M. Medical center',
-        body: 'Nurses dashboard display'
-    });
-    notification.onclick = () => {};
-    notification.show();
+    createServer();
+    
 });
 
 app.on('activate', () => {
