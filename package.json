@@ -1,0 +1,54 @@
+{
+  "name": "OFM.Medical.staff",
+  "version": "1.0.0",
+  "main": "main.js",
+  "icon": "logo.jpg",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-builder",
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "electron": "^35.1.5",
+    "electron-builder": "^26.0.12",
+    "electron-reload": "^2.0.0-alpha.1"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.7.0",
+    "@tinymce/tinymce-react": "^6.3.0",
+    "body-parser": "^2.2.0",
+    "bonjour": "^3.5.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.1",
+    "express-session": "^1.18.1",
+    "jsonwebtoken": "^9.0.2",
+    "jwt-simple": "^0.5.6",
+    "mongoose": "^8.16.0",
+    "multer": "^2.0.1",
+    "node-record-lpcm16": "^1.0.1",
+    "nodemailer": "^7.0.3",
+    "rate-limit-mongo": "^2.3.2",
+    "react-redux": "^9.2.0",
+    "react-toastify": "^11.0.5",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
+  },
+  "build": {
+    "files": [
+      "**/*",
+      "main.js",
+      "logo.jpg",
+      "preload.js",
+      "hospital/build/**/*",
+      "build/**/*"
+    ]
+  }
+}
