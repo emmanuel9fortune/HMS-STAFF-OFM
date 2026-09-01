@@ -13,11 +13,13 @@ function AdminBar() {
         window.location.reload()
     }
 
+    const app_name = process.env.REACT_APP_NAME
+
   return (
       <div className='sidebar_container'>
           <div className='sidebar_logo'>
               <img src={logo} alt='' />
-              <h3>O.F.M. Medical Centre</h3>
+              <h3>{app_name}</h3>
           </div>
   
           <Link to='/addstaff' style={{marginTop:'40px'}} className='sidebar_links'>

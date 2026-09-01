@@ -5,7 +5,7 @@
   "icon": "logo.jpg",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "electron-builder",
+    "build": "electron-builder --config electron-builder.config.js",
     "start": "electron ."
   },
   "keywords": [],
@@ -14,7 +14,7 @@
   "description": "",
   "devDependencies": {
     "concurrently": "^9.2.1",
-    "electron": "^35.1.5",
+    "electron": "^35.7.5",
     "electron-builder": "^26.0.12",
     "electron-reload": "^2.0.0-alpha.1"
   },
@@ -40,15 +40,5 @@
     "react-toastify": "^11.0.5",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1"
-  },
-  "build": {
-    "files": [
-      "**/*",
-      "main.js",
-      "logo.jpg",
-      "preload.js",
-      "hospital/build/**/*",
-      "build/**/*"
-    ]
   }
 }
