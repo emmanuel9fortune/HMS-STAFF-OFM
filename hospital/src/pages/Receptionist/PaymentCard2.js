@@ -79,6 +79,7 @@ function PaymentCard2({item, getstaffs, handleBills, setreload, reload}) {
             }
         })
         } catch (error) {
+        toast.error("Checkout unsuccessfull please try again. If it continues contact the admin!!")
         //console.log(error);
         }
     }

@@ -120,6 +120,7 @@ function Prescriptions({handleBack, setCurrentIndex, currenIndex, admin, reload,
                 }
             })
         } catch (error) {
+            toast.error("Prescription not sent please try again. If it continues contact the admin!!")
             //console.log(error);
         }
     }
@@ -153,6 +154,7 @@ function Prescriptions({handleBack, setCurrentIndex, currenIndex, admin, reload,
                 }
             })
         } catch (error) {
+            toast.error("Prescription not sent please try again. If it continues contact the admin!!")
             //console.log(error);
         }
     }
@@ -200,6 +202,7 @@ function Prescriptions({handleBack, setCurrentIndex, currenIndex, admin, reload,
                 }
             })
         } catch (error) {
+            toast.error("Prescription not sent please try again. If it continues contact the admin!!")
             //console.log(error);
         }
     }

@@ -588,7 +588,7 @@ function PatientDetails({handleBack, admin}) {
         const func=async()=>{
             try {
                 await axios.post(`http://${ip?.ip}:7700/getClinicalNote`, {uid: pid || id}).then((res)=>{
-                    // // console.log(res);
+                    // console.log(res);
                     
                     if(res.data.status === 'success'){
                         setgetnotes(res.data.gettingNote)
@@ -606,18 +606,27 @@ function PatientDetails({handleBack, admin}) {
     const staffID = sessionStorage.getItem('staffID')
     const getid = JSON.parse(staffID)
 
-    const getNotes = getnotes?.clinicalnote?.find((item) => item?.staffID === getid?._id);
 
-    
+    const getNotes = getnotes?.clinicalnote?.find((item) => item?.staffID === getid?._id);
+           
+
 
     useEffect(() => { 
-        if (!editorRef.current) return; const note = getNotes?.note || ""; 
-        // Don't overwrite the editor while the user is typing 
-        if (isEditingRef.current) return; 
+        if (!editorRef.current) return; 
+
+        // Wait until getNotes has been found
+        if (!getNotes) return;
+
+        if (isEditingRef.current) return;
+
+        const note = getNotes.note || "";
+
         if (editorRef.current.innerHTML !== note) { 
             editorRef.current.innerHTML = note; 
         } 
-    }, [getNotes?.note, currenIndex]);
+    }, [getNotes?.note, currenIndex, editorRef.current]);
+
+    
 
     const getDateStamp =()=>{
         const now = new Date()
@@ -682,15 +691,21 @@ function PatientDetails({handleBack, admin}) {
         if (!editor) return;
 
         try {
-            await axios.post(`http://${ip?.ip}:7700/ClinicalNote`, {note: editorRef.current.innerHTML, uid: pid || id, staffid: getid?._id})
+            const res = await axios.post(`http://${ip?.ip}:7700/ClinicalNote`, {note: editorRef.current.innerHTML, uid: pid || id, staffid: getid?._id})
+
+            // console.log(res)
             
         } catch (error) {
+            toast.error("Clinical note not saved please Re-enter your last word. If it continues contact the admin!!")
             console.log(error);
         }
         
     };
 
-    const handleBlur = () => { isEditingRef.current = false; };
+
+    const handleBlur = () => { 
+        isEditingRef.current = false;
+    };
     
     
     const adjustHeight = () => {
@@ -737,19 +752,19 @@ function PatientDetails({handleBack, admin}) {
 
      const handleChanges3 = async (e) => {
         // Update local state
-            setspecialInstruction(e.target.value)
+        setspecialInstruction(e.target.value)
 
-            // Send updated value to server
-            try {
-                const response = await axios.post(`http://${ip?.ip}:7700/editPatientDetails`, {changes: {specialInstruction: e.target.value}, uid: id}).then((res)=>{
-                    if(res.data.status === 'success'){
-                        // setreload(reload + 1)
-                    }
-                })
+        // Send updated value to server
+        try {
+            const response = await axios.post(`http://${ip?.ip}:7700/editPatientDetails`, {changes: {specialInstruction: e.target.value}, uid: id}).then((res)=>{
+                if(res.data.status === 'success'){
+                    // setreload(reload + 1)
+                }
+            })
             console.log("Server response:", response.data);
-            } catch (error) {
+        } catch (error) {
             console.error("Error sending data:", error);
-            }
+        }
     };
 
 
@@ -1167,7 +1182,7 @@ function PatientDetails({handleBack, admin}) {
                             {/* ------------------------------------------------------------------------ */}
                             {/* //////////////////////////////////////////////////////////////////////// */}
 
-                            <div className='sidebar_spacer' ></div>
+                            <div className='sidebar_spacer'></div>
 
                                 {
                                     getnotes?.clinicalnote?.length > 0 &&
@@ -1213,6 +1228,7 @@ function PatientDetails({handleBack, admin}) {
                                         onInput={handleInput}
                                         onFocus={handleEdit}
                                         onBlur={handleBlur}
+                                        id='clinicalNote'
                                         style={{
                                             border: '1px solid #ccc',
                                             borderRadius: '5px',
@@ -2010,6 +2026,7 @@ function PatientDetails({handleBack, admin}) {
                                         onInput={handleInput}
                                         onFocus={handleEdit}
                                         onBlur={handleBlur}
+                                        id='clinicalNote'
                                         style={{
                                         border: '1px solid #ccc',
                                         borderRadius: '5px',

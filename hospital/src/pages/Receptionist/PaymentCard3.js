@@ -66,15 +66,15 @@ function PaymentCard3({item, getstaffs, handleBills, setreload, reload}) {
         await axios.post(`http://${ip?.ip }:7700/addDeposit`, {id, deposit, mode, deps}).then((res)=>{        
             // console.log(res)
             if(res.data.status === 'success'){
-            setreload(reload + 1)
-            toast.success('DEPOSIT ADDED')
-            handleBills(uid)
-            setdeposit('')
-            setdep(false)
-            }
-        })
+                setreload(reload + 1)
+                toast.success('DEPOSIT ADDED')
+                handleBills(uid)
+                setdeposit('')
+                setdep(false)
+                }
+            })
         } catch (error) {
-        console.log(error);
+            console.log(error);
         }
     }
 
@@ -95,13 +95,14 @@ function PaymentCard3({item, getstaffs, handleBills, setreload, reload}) {
         }).then((res)=>{
             // console.log(res)
             if(res.data.status === 'success'){
-            handleBills(uid)
-            setreload(reload + 1)
-            toast.success('PATIENT CHECKOUT SUCCESSFUL')
-            setmode('')
+                handleBills(uid)
+                setreload(reload + 1)
+                toast.success('PATIENT CHECKOUT SUCCESSFUL')
+                setmode('')
             }
         })
         } catch (error) {
+            toast.error("Checkout unsuccessfull please try again. If it continues contact the admin!!")
         //console.log(error);
         }
     }
