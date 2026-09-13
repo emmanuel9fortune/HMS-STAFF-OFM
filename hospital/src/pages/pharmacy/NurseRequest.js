@@ -21,7 +21,7 @@ function NurseRequest({handleBack, setcurrentIndex, currentIndex}) {
         const func =async()=>{
             try {
                 await axios.post(`http://${ip?.ip}:7700/utilityRequest`, {uid, signal: controller.signal}).then((res)=>{
-                    //console.log(res);
+                    // console.log(res);
                     
                     if(res.data.status === 'success'){
                         setcheckOut(res.data.utils)
@@ -43,7 +43,8 @@ function NurseRequest({handleBack, setcurrentIndex, currentIndex}) {
       await axios.post(`http://${ip?.ip}:7700/utilsDispenser`, {
         uid,
         billId,
-        tag
+        tag,
+        staffId: staff[0]?._id
       }).then((res)=>{
         if(res.data.status === 'success'){
           setreload(reload + 1)

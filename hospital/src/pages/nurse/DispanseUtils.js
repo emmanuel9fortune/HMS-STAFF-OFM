@@ -492,45 +492,45 @@ function DispanseUtils({handleBack, currentIndex, setcurrentIndex}) {
 
                 <div className='cart_checkout' >
                     <div className='sidebar_spacer' ></div>              
-                <h3>CHECK OUT</h3>
+                    <h3>CHECK OUT</h3>
 
-                {
-                    utilsItems?.length > 0 ?
-                        utilsItems?.map((item, i)=>(
-                            <div key={i} style={{margin:'5px 0'}} className='cart_checkout_price' >
-                                <h4>{item?.name}</h4>
-                                <h4>{item.quantity}</h4>
-                            </div>
-                        ))
-                    : null
-                }
+                    {
+                        utilsItems?.length > 0 ?
+                            utilsItems?.map((item, i)=>(
+                                <div key={i} style={{margin:'5px 0'}} className='cart_checkout_price' >
+                                    <h4>{item?.name}</h4>
+                                    <h4>{item.quantity}</h4>
+                                </div>
+                            ))
+                        : null
+                    }
+                        
+                    <div className='cart_checkout_price' >
+                        <h3 style={{margin:'7px 0'}}>ACTUAL PRICE</h3>
+                        <h3 style={{margin:'7px 0'}}>{formatted.format(totalPrice1)}</h3>
+                    </div>
+                        
+                    <div className='cart_checkout_price' >
+                        <h3 style={{margin:'7px 0'}}>TOTAL PRICE</h3>
+                        <h3 style={{margin:'7px 0'}}>{formatted.format(actualPrice1)}</h3>
+                    </div>
+                        
+                    <div className='cart_checkout_price' >
+                        <h3 style={{margin:'7px 0'}}>PROFIT</h3>
+                        <h3 style={{margin:'7px 0'}}>{formatted.format(profit1)}</h3>
+                    </div>
                     
-                <div className='cart_checkout_price' >
-                    <h3 style={{margin:'7px 0'}}>ACTUAL PRICE</h3>
-                    <h3 style={{margin:'7px 0'}}>{formatted.format(totalPrice1)}</h3>
-                </div>
-                    
-                <div className='cart_checkout_price' >
-                    <h3 style={{margin:'7px 0'}}>TOTAL PRICE</h3>
-                    <h3 style={{margin:'7px 0'}}>{formatted.format(actualPrice1)}</h3>
-                </div>
-                    
-                <div className='cart_checkout_price' >
-                    <h3 style={{margin:'7px 0'}}>PROFIT</h3>
-                    <h3 style={{margin:'7px 0'}}>{formatted.format(profit1)}</h3>
-                </div>
-                
 
-                {   
-                    utilsItems?.length > 0  ?
-                        <>
-                            <button className='custome_table_btn2' onClick={()=>handleSubmit('utils', 'ut')}>REQUEST UTILITIES</button>
+                    {   
+                        utilsItems?.length > 0  ?
+                            <>
+                                <button className='custome_table_btn2' onClick={()=>handleSubmit('utils', 'ut')}>REQUEST UTILITIES</button>
 
-                            <button className='custome_table_btn2' style={{backgroundColor:'#fff', color:'blue', margin:'5px 0', border:'1px solid blue'}} onClick={()=> dispatch(emptyUtils())}>CLEAR UTILITIES</button>
-                        </>
-                    :
-                    <button style={{opacity:.3}} className='custome_table_btn2'>REQUEST UTILITIES</button>
-                }
+                                <button className='custome_table_btn2' style={{backgroundColor:'#fff', color:'blue', margin:'5px 0', border:'1px solid blue'}} onClick={()=> dispatch(emptyUtils())}>CLEAR UTILITIES</button>
+                            </>
+                        :
+                        <button style={{opacity:.3}} className='custome_table_btn2'>REQUEST UTILITIES</button>
+                    }
                 </div>
             </div>
         }

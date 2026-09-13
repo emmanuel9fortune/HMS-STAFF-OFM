@@ -24,7 +24,7 @@ function InpatientRequest() {
   const handleBills =async(id)=>{
     try {
       await axios.post(`http://${ip?.ip}:7700/getInpatientRequest`, { uid: id }).then((res)=>{
-        console.log(res);
+        // console.log(res);
         if(res.data.status === 'success'){
           setcheckOut(res.data.getpatientBills)
           setconsume(res.data.getconsumableBills)
@@ -42,7 +42,7 @@ function InpatientRequest() {
     const func =async()=>{
       try {
           await axios.post(`http://${ip?.ip}:7700/InpatientOnBill`, {signal: controller.signal}).then((res)=>{
-            console.log(res);
+            // console.log(res);
             
             if(res.data.status === 'success'){
               setpatients(res.data.getpatients)
@@ -157,7 +157,7 @@ function InpatientRequest() {
         }
         try {
             await axios.post(`http://${ip?.ip}:7700/decline`, value).then((res)=>{  
-                console.log(res);
+                // console.log(res);
                                 
                 if(res.data.status === 'success'){
                     toast.success('CHECK OUT SUCCESSFULL')
@@ -184,7 +184,7 @@ function InpatientRequest() {
 
         try {
             await axios.post(`http://${ip?.ip}:7700/inpatientBill`, value).then((res)=>{  
-                console.log(res);
+                // console.log(res);
                                 
                 if(res.data.status === 'success'){
                     toast.success('CHECK OUT SUCCESSFULL')
@@ -204,7 +204,7 @@ function InpatientRequest() {
         }
         try {
             await axios.post(`http://${ip?.ip}:7700/decline`, value).then((res)=>{  
-                console.log(res);
+                // console.log(res);
                                 
                 if(res.data.status === 'success'){
                     toast.success('CHECK OUT SUCCESSFULL')

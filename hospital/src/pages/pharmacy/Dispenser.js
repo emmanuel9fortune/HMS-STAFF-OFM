@@ -10,7 +10,7 @@ import { selectip } from '../../features/ipSlice'
 function Dispenser() {
 
     //axios.defaults.withCredentials = true
-        const ip = useSelector(selectip)
+    const ip = useSelector(selectip)
     
     const [search, setsearch] = useState([])
     const [getsearch, setgetsearch] = useState('')

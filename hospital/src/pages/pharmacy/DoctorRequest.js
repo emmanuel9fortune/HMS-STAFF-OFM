@@ -43,7 +43,8 @@ function DoctorRequest({handleBack, setcurrentIndex, currentIndex}) {
         await axios.post(`http://${ip?.ip}:7700/utilsDispenser`, {
             uid,
             billId,
-            tag
+            tag,
+            staffId: staff[0]?._id
         }).then((res)=>{ 
             if(res.data.status === 'success'){
             setreload(reload + 1)
