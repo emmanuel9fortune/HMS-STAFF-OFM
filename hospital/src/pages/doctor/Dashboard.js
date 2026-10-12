@@ -203,7 +203,7 @@ function Dashboard() {
                                         const date = new Date(Number(item?.timeStamp))
                                         const day = date.getDate()
                                         const month = date.getMonth() + 1
-                                        const year = date.getFullYear()
+                                        const year = date.getFullYear() 
 
                                         let hours = date.getHours()
                                         const minutes = date.getMinutes()
@@ -219,7 +219,7 @@ function Dashboard() {
                                         const getpatientName = info?.getPatientDetails?.find((nm)=> nm?._id === item?.uid)
 
                                         return (
-                                    <div key={i} style={i <= 1 ? {color:'goldenrod'} : {}} className='recentpatientdashcard'>
+                                    <div key={i} onClick={()=>handleView(item?.uid, item?.familyid )} style={i <= 1 ? {color:'goldenrod', cursor:'pointer'} : {cursor:'pointer'}} className='recentpatientdashcard'>
                                         <div className='recentpatientdashcard_desc'>
                                             <h4>{item?.type}</h4>
                                             <p><strong style={{fontSize:'18px'}}>( {getpatientName?.name} )</strong> {item?.message}</p>

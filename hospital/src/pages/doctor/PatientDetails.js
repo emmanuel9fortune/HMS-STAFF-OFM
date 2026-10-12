@@ -601,7 +601,7 @@ function PatientDetails({handleBack, admin}) {
             }
         }
         func()
-    }, [reload, ip, id, pid]);
+    }, [reload, id, pid]);
     
     const staffID = sessionStorage.getItem('staffID')
     const getid = JSON.parse(staffID)
@@ -646,61 +646,152 @@ function PatientDetails({handleBack, admin}) {
         sel.addRange(range)
     }
 
-    const handleEdit =()=>{
-        const editor = editorRef.current; 
+    
+    // const initialLengthRef = useRef(0);
+    // const [initialLength, setInitialLength] = useState(0);
+
+    // const handleEdit =()=>{
+    //     const editor = editorRef.current; 
+    //     if (!editor) return;
+
+
+    //     isEditingRef.current = true; 
+    //     const text = editor.innerText.trim();
+
+        
+    //     initialLengthRef.current = text.length;
+    //     setInitialLength(text.length);
+
+    //     const lines = text.split("\n"); 
+    //     const last = lines[lines.length - 1] || "";
+
+    //     if (!last.startsWith("[")) { 
+    //         const dateStamp = document.createElement("div"); 
+    //         dateStamp.textContent = getDateStamp(); 
+    //         editor.appendChild(document.createTextNode(" ")); 
+    //         editor.appendChild(document.createElement("br")); 
+    //         editor.appendChild(dateStamp); 
+    //         editor.appendChild(document.createElement("br")); 
+    //     } 
+        
+    //     editor.focus(); 
+    //     // Put cursor at the end 
+    //     moveCursor(editor);
+    // }
+
+    // // console.log(initialLengthRef);
+    
+
+    // const handleInput = async () => {
+    //     const editor = editorRef.current;
+    //     if (!editor) return;
+
+    //     const text = editor.innerText.trim();
+    //     const currentLength = text.length;
+    //     const originalLength = initialLengthRef.current;
+
+    //     // Do not save an empty note
+    //     if (!text) return;
+
+    //     // Save only when the new length is greater than the initial length
+    //     if (currentLength <= initialLength) return;
+
+    //     try {
+    //         await axios.post(`http://${ip?.ip}:7700/ClinicalNote`, {
+    //             note: editor.innerHTML,
+    //             uid: pid || id,
+    //             staffid: getid?._id
+    //         });
+
+    //         // Update initial length after successful save
+    //         initialLengthRef.current = currentLength;
+    //         setInitialLength(currentLength);
+
+    //     } catch (error) {
+    //         toast.error(
+    //             "Clinical note not saved. Please re-enter your last word. If it continues, contact the admin!"
+    //         );
+    //         console.error(error);
+    //     }
+    // };
+
+    const initialLengthRef = useRef(null);
+    const isSavingRef = useRef(false);
+
+    const handleEdit = () => {
+        const editor = editorRef.current;
         if (!editor) return;
 
-        isEditingRef.current = true; 
-        const text = editor.innerText.trim();
+        // Capture the original length only once
+        if (initialLengthRef.current === null) {
+            initialLengthRef.current = editor.innerText.trim().length;
+        }
 
-        const lines = text.split("\n"); 
+        isEditingRef.current = true;
+
+        const text = editor.innerText.trim();
+        const lines = text.split("\n");
         const last = lines[lines.length - 1] || "";
 
-        if (!last.startsWith("[")) { 
-            const dateStamp = document.createElement("div"); 
-            dateStamp.textContent = getDateStamp(); 
-            editor.appendChild(document.createTextNode(" ")); 
-            editor.appendChild(document.createElement("br")); 
-            editor.appendChild(dateStamp); 
-            editor.appendChild(document.createElement("br")); 
-        } 
-        
-        editor.focus(); 
-        // Put cursor at the end 
+        if (!last.startsWith("[")) {
+            const dateStamp = document.createElement("div");
+            dateStamp.textContent = getDateStamp();
+
+            editor.appendChild(document.createTextNode(" "));
+            editor.appendChild(document.createElement("br"));
+            editor.appendChild(dateStamp);
+            editor.appendChild(document.createElement("br"));
+        }
+
+        editor.focus();
         moveCursor(editor);
+    };
 
-        // const dateStamp = document.createElement("div")
-        // dateStamp.textContent = getDateStamp()
+    const handleInput = async () => {
+        const editor = editorRef.current;
+        if (!editor || isSavingRef.current) return;
 
-        // const last = editorRef.current.innerText.trim().split("\n").pop()
-        // const space = document.createTextNode(" ")
-        // const lineBreak = document.createElement("br")
-        // if(!last.startsWith("[")){
-        //     editorRef.current.appendChild(space)
-        //     editorRef.current.appendChild(lineBreak)
-        //     editorRef.current.appendChild(dateStamp)
-        //     editorRef.current.appendChild(lineBreak)
-        //     editorRef.current.focus()
-        // }
-        // moveCursor(editorRef.current)
-    }
+        const text = editor.innerText.trim();
 
+        // Ignore empty notes
+        if (!text) return;
 
-    const handleInput = async() => {
-        const editor = editorRef.current; 
-        if (!editor) return;
+        // Ignore date stamps and blank lines when checking for actual note content
+        const meaningfulText = text
+            .split("\n")
+            .filter(line => line.trim() && !line.trim().startsWith("["))
+            .join("\n")
+            .trim();
+
+        if (!meaningfulText) return;
+
+        const currentLength = text.length;
+        const originalLength = initialLengthRef.current;
+
+        // Do not save unless the current length is greater
+        if (originalLength === null || currentLength <= originalLength) {
+            return;
+        }
 
         try {
-            const res = await axios.post(`http://${ip?.ip}:7700/ClinicalNote`, {note: editorRef.current.innerHTML, uid: pid || id, staffid: getid?._id})
+            isSavingRef.current = true;
 
-            // console.log(res)
-            
+            await axios.post(`http://${ip?.ip}:7700/ClinicalNote`, {
+                note: editor.innerHTML,
+                uid: pid || id,
+                staffid: getid?._id
+            });
+
         } catch (error) {
-            toast.error("Clinical note not saved please Re-enter your last word. If it continues contact the admin!!")
-            console.log(error);
+            toast.error(
+                "Clinical note not saved. Please re-enter your last word. If it continues, contact the admin!"
+            );
+            console.error(error);
+        } finally {
+            isSavingRef.current = false;
         }
-        
     };
+
 
 
     const handleBlur = () => { 
@@ -2028,16 +2119,16 @@ function PatientDetails({handleBack, admin}) {
                                         onBlur={handleBlur}
                                         id='clinicalNote'
                                         style={{
-                                        border: '1px solid #ccc',
-                                        borderRadius: '5px',
-                                        minHeight: '200px',
-                                        padding: '10px',
-                                        backgroundColor: '#fff',
-                                        width: '70%',
-                                        overflowY: 'scroll',
-                                        fontSize: '16px',
-                                        whiteSpace: 'pre-wrap',
-                                        height:'700px',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '5px',
+                                            minHeight: '200px',
+                                            padding: '10px',
+                                            backgroundColor: '#fff',
+                                            width: '70%',
+                                            overflowY: 'scroll',
+                                            fontSize: '16px',
+                                            whiteSpace: 'pre-wrap',
+                                            height:'700px',
                                         }}
                                     >
                                     </div>
