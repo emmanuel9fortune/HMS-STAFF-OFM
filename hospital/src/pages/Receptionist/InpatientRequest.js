@@ -24,7 +24,7 @@ function InpatientRequest() {
   const handleBills =async(id)=>{
     try {
       await axios.post(`http://${ip?.ip}:7700/getInpatientRequest`, { uid: id }).then((res)=>{
-        // console.log(res);
+        console.log(res);
         if(res.data.status === 'success'){
           setcheckOut(res.data.getpatientBills)
           setconsume(res.data.getconsumableBills)
@@ -170,7 +170,7 @@ function InpatientRequest() {
         }
     }
     
-    const handleApprove=async(cartItems, totalPrice, id, uid)=>{
+    const handleApprove=async(cartItems, totalPrice, id, uid, doctorID, instruction)=>{
         const getservices = {
             totalPrice: totalPrice,
             items: cartItems
@@ -178,8 +178,10 @@ function InpatientRequest() {
         const value ={
             uid: uid,
             id,
-            docID: getid?._id,
-            services: JSON.stringify(getservices)
+            docID: doctorID,
+            cashier: getid?._id,
+            services: JSON.stringify(getservices),
+            instruction: JSON.stringify(instruction),
         }
 
         try {
@@ -284,7 +286,8 @@ function InpatientRequest() {
                                             <h3 style={{margin:'7px 0'}}>TOTAL PRICE</h3>
                                             <h3 style={{margin:'7px 0'}}>{formatted?.format(totalPrice)}</h3>
                                         </div>                                        
-                                        <button onClick={()=>handleApprove(item?.prescribe, totalPrice, item?._id, item?.uid)} style={{margin: '10px 0', width:'100%'}} className='custome_table_btn2' >APPROVE REQUEST</button>
+                                        <button onClick={()=>handleApprove(item?.prescribe, totalPrice, item?._id, item?.uid, item?.doctorID, item?.instruction)} style={{margin: '10px 0', width:'100%'}} className='custome_table_btn2' >APPROVE REQUEST</button>
+
                                         <button onClick={()=>handleDecline(item?.prescribe, item?.uid)} style={{margin: '10px 0', width:'100%', backgroundColor:'#fff', color:'red', border:'1px solid red'}} className='custome_table_btn2' >DECLINE REQUEST</button>
                                     </div>
                                 )

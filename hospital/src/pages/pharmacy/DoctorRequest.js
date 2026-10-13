@@ -59,7 +59,7 @@ function DoctorRequest({handleBack, setcurrentIndex, currentIndex}) {
 
   return (
     <div className='dashboard_body' >
-        <div className='back_btn_' onClick={handleBack}>
+        <div className='back_btn_' onClick={()=> setcurrentIndex(0)}>
             <FaChevronLeft />
             <h4>BACK</h4>
         </div>
@@ -101,10 +101,35 @@ function DoctorRequest({handleBack, setcurrentIndex, currentIndex}) {
 
                     const timeString = `${pad(hours)}:${pad(minutes)} ${ampm}`
 
+                    const text = item?.instruction;
+                    const lines = text.split("\n");
+                    const last = lines[lines.length - 1] || "";
+                    
+                    const indentifyJSON =()=> {
+                        try {
+                            JSON.parse(item?.instruction)
+                            return ("success")
+                        } catch (error) {
+                            return ("error")
+                        }
+                    }
+
+                    const result = indentifyJSON()
+
                     return(
                     <div key={i} className='payment_desk_checkout'>
                         <h4 style={{margin:'10px 0'}} >DOCTOR {getstaff?.name} PRESCRIPTION</h4>
-                        <p style={{margin:'10px 0'}}>instruction: {item?.instruction}</p>
+
+                        {
+                            result === "success" ?
+                                indentifyJSON?.map((item, i)=>(
+                                    <div key={i}>
+                                        <p style={{margin:'10px 0', textTransform:'upperCase', color:'red'}}>instruction: {item?.instruction}</p>
+                                    </div>
+                                ))
+                            :
+                            <p style={{margin:'10px 0', textTransform:'upperCase', color:'red'}}>instruction: {item?.instruction}</p>
+                        }
                         
 
                         {

@@ -61,6 +61,8 @@ function PaymentCard3({item, getstaffs, handleBills, setreload, reload}) {
     const [dep, setdep] = useState(false)
     const [mode, setmode] = useState('')
 
+    const [isLoading, setIsLoading] = useState(false)
+
     const handleDeposit =async(id, uid, deps)=>{
         try {
         await axios.post(`http://${ip?.ip }:7700/addDeposit`, {id, deposit, mode, deps}).then((res)=>{        
@@ -84,6 +86,7 @@ function PaymentCard3({item, getstaffs, handleBills, setreload, reload}) {
 
     const handleCheckOut =async(uid, billId, total, type, getUtils)=>{
         try {
+            setIsLoading(true)
         await axios.post(`http://${ip?.ip}:7700/patientCheckOut`, {
             uid,
             billId,
@@ -104,6 +107,8 @@ function PaymentCard3({item, getstaffs, handleBills, setreload, reload}) {
         } catch (error) {
             toast.error("Checkout unsuccessfull please try again. If it continues contact the admin!!")
         //console.log(error);
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -158,104 +163,123 @@ function PaymentCard3({item, getstaffs, handleBills, setreload, reload}) {
     }
 
     return(
-    <div style={{backgroundColor:'cadetblue'}}>
-        { 
-        item?.type !== 'lab' &&
-            item?.type !== 'scan' &&
-            <div className='payment_desk_checkout' >
-            {
-                item?.type !== 'lab' && item?.type !== 'scan' &&
-                <div className='psyment_desk_history' >
-                    <p>Date : </p>
-                    <p style={{margin:'0 10px'}} >{timeString}, {`${day}-${month}-${year}`}</p>
+    <>
+        {isLoading && (
+            <div className="audit_results_loading">
+                <div className="audit_loading_box">
 
-                    <h4>Staff: {getStaffName?.name}</h4>
-                </div>   
-            }
-            {
-                getBill?.items?.length > 0 ?
-                    getBill?.items?.map((item, i)=>{
-                    
-                    const formatted = new Intl.NumberFormat('en-NG', {
-                        style: 'currency',
-                        currency: 'NGN',
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 0
-                    })
-                    
-                    return(
-                        <div key={i} style={{margin:'5px 0'}} className='cart_checkout_price' >
-                        <div style={{width: '70%'}} >
-                            <h4 style={{width:'100%', backgroundColor:'whitesmoke', padding:'5px'}}>{item?.name || item?.drugs}</h4>
-                            <p style={{width:'100%', backgroundColor:'orange', padding:'5px'}}>{item?.quantity} Sold For :</p>
-                            <p>1 Sold For :</p>
-                        </div>
+                    <div className="audit_spinner"></div>
+
+                    <h4>
+                        Uploading data...
+                    </h4>
+
+                    <p>
+                        Please wait while the data uploads.
+                    </p>
+
+                </div>
+            </div>
+        )} 
+        <div style={{backgroundColor:'cadetblue'}}>
+            { 
+            item?.type !== 'lab' &&
+                item?.type !== 'scan' &&
+                <div className='payment_desk_checkout' >
+                {
+                    item?.type !== 'lab' && item?.type !== 'scan' &&
+                    <div className='psyment_desk_history' >
+                        <p>Date : </p>
+                        <p style={{margin:'0 10px'}} >{timeString}, {`${day}-${month}-${year}`}</p>
+
+                        <h4>Staff: {getStaffName?.name}</h4>
+                    </div>   
+                }
+                {
+                    getBill?.items?.length > 0 ?
+                        getBill?.items?.map((item, i)=>{
                         
-                        <div style={{width: '30%', display:'flex', flexDirection:'column', alignItems:'flex-end'}} >
-                            <h4 style={{width:'100%', backgroundColor:'whitesmoke', padding:'5px', textAlign:'end'}}>{item?.quantity}</h4>
-                            <h4 style={{width:'100%', backgroundColor:'orange', textAlign:'end', padding:'5px'}}>{formatted.format(item?.quantity > 0 ? item?.price * item?.quantity : item?.price)}</h4>
-                            <h4>{formatted.format(item?.price)}</h4>
-                        </div>
-                        </div>
-                    )})
-                : null
-            }
-        
-            {
-                getBill?.actualPrice &&
-                <div className='cart_checkout_price' >
-                <h4 style={{margin:'7px 0'}}>ACTUAL PRICE</h4>
-                <h4 style={{margin:'7px 0'}}>{ formatted2}</h4>
-                </div>
-            }
-            {
-                getBill?.actualPrice &&
-                <div className='cart_checkout_price' >
-                <h4 style={{margin:'7px 0'}}>PROFIT</h4>
-                <h4 style={{margin:'7px 0'}}>{formatted3}</h4>
-                </div>
-            }
-                
-            <div className='cart_checkout_price' >
-                <h3 style={{margin:'7px 0'}}>TOTAL PRICE</h3>
-                <h3 style={{margin:'7px 0'}}>{getBill?.totalPrice ? formatted : format.format(getBill?.items?.[0]?.totalPrice)}</h3>
-            </div>
+                        const formatted = new Intl.NumberFormat('en-NG', {
+                            style: 'currency',
+                            currency: 'NGN',
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0
+                        })
+                        
+                        return(
+                            <div key={i} style={{margin:'5px 0'}} className='cart_checkout_price' >
+                            <div style={{width: '70%'}} >
+                                <h4 style={{width:'100%', backgroundColor:'whitesmoke', padding:'5px'}}>{item?.name || item?.drugs}</h4>
+                                <p style={{width:'100%', backgroundColor:'orange', padding:'5px'}}>{item?.quantity} Sold For :</p>
+                                <p>1 Sold For :</p>
+                            </div>
+                            
+                            <div style={{width: '30%', display:'flex', flexDirection:'column', alignItems:'flex-end'}} >
+                                <h4 style={{width:'100%', backgroundColor:'whitesmoke', padding:'5px', textAlign:'end'}}>{item?.quantity}</h4>
+                                <h4 style={{width:'100%', backgroundColor:'orange', textAlign:'end', padding:'5px'}}>{formatted.format(item?.quantity > 0 ? item?.price * item?.quantity : item?.price)}</h4>
+                                <h4>{formatted.format(item?.price)}</h4>
+                            </div>
+                            </div>
+                        )})
+                    : null
+                }
             
-            <div className='patient_details_input_field1_' >
-                <h4>CHOOSE METHOD</h4>
-                <select value={mode} onChange={(e)=>setmode(e.target.value)} >
-                    <option  value=''>-- SELECT PAYMENT METHOD ---</option>
-                    <option value='cash' >-- CASH ---</option>
-                    <option value='pos'>-- POS ---</option>
-                    <option value='transfer'>-- TRANSFER ---</option>
-                </select>
-            </div>  
+                {
+                    getBill?.actualPrice &&
+                    <div className='cart_checkout_price' >
+                    <h4 style={{margin:'7px 0'}}>ACTUAL PRICE</h4>
+                    <h4 style={{margin:'7px 0'}}>{ formatted2}</h4>
+                    </div>
+                }
+                {
+                    getBill?.actualPrice &&
+                    <div className='cart_checkout_price' >
+                    <h4 style={{margin:'7px 0'}}>PROFIT</h4>
+                    <h4 style={{margin:'7px 0'}}>{formatted3}</h4>
+                    </div>
+                }
+                    
+                <div className='cart_checkout_price' >
+                    <h3 style={{margin:'7px 0'}}>TOTAL PRICE</h3>
+                    <h3 style={{margin:'7px 0'}}>{getBill?.totalPrice ? formatted : format.format(getBill?.items?.[0]?.totalPrice)}</h3>
+                </div>
+                
+                <div className='patient_details_input_field1_' >
+                    <h4>CHOOSE METHOD</h4>
+                    <select value={mode} onChange={(e)=>setmode(e.target.value)} >
+                        <option  value=''>-- SELECT PAYMENT METHOD ---</option>
+                        <option value='cash' >-- CASH ---</option>
+                        <option value='pos'>-- POS ---</option>
+                        <option value='transfer'>-- TRANSFER ---</option>
+                    </select>
+                </div>  
 
-            {
-                getBill ?
-                mode ? 
-                dep && deposit ?
-                deposit > getBill?.totalPrice && !item?.initialDeposit ?
-                <button onClick={()=> toast.error('OVER DEPOSITED AMOUNT ')} style={{margin: '20px 0', width:'100%', opacity:.1}} className='custome_table_btn2' >DEPOSIT</button>
-                :
-                deposit > getBill?.totalPrice - item?.initialDeposit ?
-                <button onClick={()=> toast.error('OVER DEPOSITED AMOUNT ')} style={{margin: '20px 0', width:'100%', opacity:.1}} className='custome_table_btn2' >DEPOSIT</button>
-                :
-                <button onClick={()=>handleDeposit(item?._id, item?.uid, item?.deposit)} style={{margin: '20px 0', width:'100%'}} className='custome_table_btn2' >RECORD DEPOSIT</button>
-                :
-                <button onClick={()=>handleCheckOut(item?.uid, item?._id, getBill?.totalPrice, item?.type, getUtils)} style={{margin: '20px 0', width:'100%'}} className='custome_table_btn2' >CHECK OUT NOW</button>
-                :
-                <button onClick={()=> toast.error('ENTER PAYMENT METHOD')} style={{margin: '20px 0', width:'100%', opacity:.1}} className='custome_table_btn2' >CHECK OUT NOW</button>
-                :
-                null
+                {
+                    getBill ?
+                    mode ? 
+                    dep && deposit ?
+                    deposit > getBill?.totalPrice && !item?.initialDeposit ?
+                    <button onClick={()=> toast.error('OVER DEPOSITED AMOUNT ')} style={{margin: '20px 0', width:'100%', opacity:.1}} className='custome_table_btn2' >DEPOSIT</button>
+                    :
+                    deposit > getBill?.totalPrice - item?.initialDeposit ?
+                    <button onClick={()=> toast.error('OVER DEPOSITED AMOUNT ')} style={{margin: '20px 0', width:'100%', opacity:.1}} className='custome_table_btn2' >DEPOSIT</button>
+                    :
+                    <button onClick={()=>handleDeposit(item?._id, item?.uid, item?.deposit)} style={{margin: '20px 0', width:'100%'}} className='custome_table_btn2' >RECORD DEPOSIT</button>
+                    :
+                    <button onClick={()=>handleCheckOut(item?.uid, item?._id, getBill?.totalPrice, item?.type, getUtils)} style={{margin: '20px 0', width:'100%'}} className='custome_table_btn2' >CHECK OUT NOW</button>
+                    :
+                    <button onClick={()=> toast.error('ENTER PAYMENT METHOD')} style={{margin: '20px 0', width:'100%', opacity:.1}} className='custome_table_btn2' >CHECK OUT NOW</button>
+                    :
+                    null
+                }
+
+                <button onClick={()=>handleDisapprove(item?.uid, item?._id, getBill?.totalPrice, item?.type)} style={{margin: '20px 0', width:'100%', backgroundColor:'red'}} className='custome_table_btn2' >DISAPPROVE BILL</button>
+
+                <button onClick={()=>handleDebtor(item?.uid, item?._id, getBill?.totalPrice, item?.type)} style={{margin: '20px 0', width:'100%', backgroundColor:'gold'}} className='custome_table_btn2' >SET BILL TO DEBTOR</button>
+                </div>
             }
-
-            <button onClick={()=>handleDisapprove(item?.uid, item?._id, getBill?.totalPrice, item?.type)} style={{margin: '20px 0', width:'100%', backgroundColor:'red'}} className='custome_table_btn2' >DISAPPROVE BILL</button>
-
-            <button onClick={()=>handleDebtor(item?.uid, item?._id, getBill?.totalPrice, item?.type)} style={{margin: '20px 0', width:'100%', backgroundColor:'gold'}} className='custome_table_btn2' >SET BILL TO DEBTOR</button>
-            </div>
-        }
-    </div>
+        </div>
+    </>
   )
 }
 

@@ -88,6 +88,8 @@ function Prescriptions({handleBack, setCurrentIndex, currenIndex, admin, reload,
 
     const staffID = sessionStorage.getItem('staffID')
     const getid = JSON.parse(staffID)
+
+    const [isLoading, setIsLoading] = useState(false)
     
 
     const [instruction, setinstruction] = useState('')
@@ -108,6 +110,7 @@ function Prescriptions({handleBack, setCurrentIndex, currenIndex, admin, reload,
             instruction,
             oid: id
         }
+        setIsLoading(true)
 
         try {
             await axios.post(`http://${ip?.ip}:7700/docBill`, value).then((res)=>{  
@@ -122,6 +125,8 @@ function Prescriptions({handleBack, setCurrentIndex, currenIndex, admin, reload,
         } catch (error) {
             toast.error("Prescription not sent please try again. If it continues contact the admin!!")
             //console.log(error);
+        } finally{
+            setIsLoading(false)
         }
     }
 
@@ -232,6 +237,25 @@ function Prescriptions({handleBack, setCurrentIndex, currenIndex, admin, reload,
             <FaChevronLeft /> 
             <h4>BACK</h4>
         </div>
+
+        {isLoading && (
+            <div className="audit_results_loading">
+                <div className="audit_loading_box">
+
+                    <div className="audit_spinner"></div>
+
+                    <h4>
+                        Uploading data...
+                    </h4>
+
+                    <p>
+                        Please wait while the data uploads.
+                    </p>
+
+                </div>
+            </div>
+        )}
+
         <div className='dashboard_body_patient_details_btns'>
             <button onClick={()=>{setCurrentIndex(0); dispatch(setfids({id:'', fid:''}))}} >PATIENT DETAILS</button>
             <button onClick={()=>{setCurrentIndex(1); dispatch(setfids({id:'', fid:''}))}} >VITALS</button>

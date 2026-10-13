@@ -18,6 +18,8 @@ import Prescriptions from './Prescriptions'
 import { FiLoader } from 'react-icons/fi'
 import UrineOutput from './UrineOutput'
 import TransactionHistory from './TransactionHistory'
+import { setids } from '../../features/idSlice'
+import { setfids } from '../../features/fidSlice'
 
 function Dashboard() {
     
@@ -97,6 +99,23 @@ function Dashboard() {
     const isMobileDevice = window.innerWidth <= 768    
 
     const getPatientName = sessionStorage.getItem('name') 
+
+    const handleView =(item)=>{
+        sessionStorage.setItem('name', item?.name)
+        setcurrentIndex(currentIndex + 1)
+        dispatch(
+            setids({
+                id: item?._id,
+                fid: item?.familyid || ""
+            })
+        )
+        dispatch(
+            setfids({
+                id:'',
+                fid:''
+            })
+        )
+    }
 
   return (
     <div className='dashboard_container' style={isMobileDevice ? {width:'100%', padding:'5px'} : {}}>
@@ -183,7 +202,7 @@ function Dashboard() {
                                             const getpatientName = info?.getPatientDetails?.find((nm)=> nm?._id === item?.uid)
 
                                         return (
-                                        <div key={i} style={i <= 1 ? {color:'goldenrod'} : {}} className='recentpatientdashcard notification_cards'>
+                                        <div key={i} style={i <= 1 ? {color:'goldenrod', cursor:"pointer"} : {cursor:"pointer"}} className='recentpatientdashcard notification_cards' onClick={()=>handleView(getpatientName)}>
                                             <div className='recentpatientdashcard_desc'>
                                                 <h4>{item?.type}</h4>
                                                 <p><strong style={{fontSize:'18px'}}>( {getpatientName?.name} )</strong> {item?.message} </p>

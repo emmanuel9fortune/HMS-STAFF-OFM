@@ -175,7 +175,7 @@ function Dashboard() {
                                         const getpatientName = info?.getPatientDetails?.find((nm)=> nm?._id === item?.uid)
 
                                         return (
-                                    <div key={i} style={i <= 1 ? {color:'goldenrod'} : {}} className='recentpatientdashcard'>
+                                    <div key={i} style={i <= 1 ? {color:'goldenrod', cursor:"pointer"} : {cursor:"pointer"}} className='recentpatientdashcard' onClick={()=>handleView(item?.uid)}>
                                         <div className='recentpatientdashcard_desc'>
                                             <p>New {item?.type === 'New Request' ? 'Consumable Request' : 'Prescription'} Sent for <strong style={{fontSize:'18px'}}>( {getpatientName?.name} )</strong></p>
                                         </div>
