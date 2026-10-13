@@ -113,16 +113,17 @@ function DoctorRequest({handleBack, setcurrentIndex, currentIndex}) {
                             return ("error")
                         }
                     }
-
+                    
                     const result = indentifyJSON()
-
+                    const instructions = JSON.parse(item?.instruction)
+                    
                     return(
                     <div key={i} className='payment_desk_checkout'>
                         <h4 style={{margin:'10px 0'}} >DOCTOR {getstaff?.name} PRESCRIPTION</h4>
 
                         {
                             result === "success" ?
-                                indentifyJSON?.map((item, i)=>(
+                                instructions?.map((item, i)=>(
                                     <div key={i}>
                                         <p style={{margin:'10px 0', textTransform:'upperCase', color:'red'}}>instruction: {item?.instruction}</p>
                                     </div>
